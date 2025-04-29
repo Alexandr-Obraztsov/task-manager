@@ -18,10 +18,12 @@ export const Card = ({
 	const baseStyles = 'text-[var(--tg-theme-text-color)]'
 
 	const variantStyles = {
-		default: 'bg-[var(--tg-theme-secondary-bg-color)]',
+		default:
+			'bg-[var(--tg-theme-secondary-bg-color)] border border-[var(--tg-theme-button-color)] border-opacity-10',
 		outlined:
 			'bg-transparent border border-[var(--tg-theme-hint-color)] border-opacity-30',
-		elevated: 'bg-[var(--tg-theme-secondary-bg-color)] shadow-md',
+		elevated:
+			'bg-[var(--tg-theme-secondary-bg-color)] shadow-md border border-[var(--tg-theme-button-color)] border-opacity-15',
 	}
 
 	const paddingStyles = {

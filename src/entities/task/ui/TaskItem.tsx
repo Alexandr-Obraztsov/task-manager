@@ -55,7 +55,10 @@ export default function TaskItem({
 	// Режим редактирования
 	if (isEditing) {
 		return (
-			<Card className='transition-all duration-200 hover:shadow-md'>
+			<Card
+				className='transition-all duration-200 hover:shadow-md mb-4'
+				variant='elevated'
+			>
 				<Input
 					label='Заголовок'
 					value={title}
@@ -97,10 +100,12 @@ export default function TaskItem({
 	// Режим просмотра
 	return (
 		<Card
-			className={`transition-all duration-200 ${
-				task.completed ? 'opacity-80' : 'hover:shadow-md'
+			className={`transition-all duration-200 mb-4 ${
+				task.completed
+					? 'opacity-80'
+					: 'hover:shadow-lg hover:border-opacity-30 hover:border-[var(--tg-theme-button-color)]'
 			}`}
-			variant={task.completed ? 'outlined' : 'default'}
+			variant={task.completed ? 'outlined' : 'elevated'}
 		>
 			<div className='flex items-start justify-between'>
 				<div className='flex items-start space-x-3 flex-1'>
@@ -109,7 +114,7 @@ export default function TaskItem({
 							type='checkbox'
 							checked={task.completed}
 							onChange={handleToggleComplete}
-							className='h-5 w-5 rounded border-[var(--tg-theme-button-color)] text-[var(--tg-theme-button-color)] focus:ring-[var(--tg-theme-button-color)] focus:ring-opacity-30'
+							className='h-5 w-5 rounded border-2 border-[var(--tg-theme-button-color)] text-[var(--tg-theme-button-color)] focus:ring-[var(--tg-theme-button-color)] focus:ring-opacity-30'
 						/>
 					</div>
 					<div className='flex-1 min-w-0'>
@@ -167,7 +172,7 @@ export default function TaskItem({
 						disabled={task.completed}
 						size='sm'
 						fullWidth={false}
-						className='text-sm'
+						className='text-sm shadow-sm hover:shadow'
 					>
 						Изменить
 					</Button>
@@ -178,7 +183,7 @@ export default function TaskItem({
 						isLoading={isDeleting}
 						size='sm'
 						fullWidth={false}
-						className='text-sm'
+						className='text-sm shadow-sm hover:shadow'
 					>
 						Удалить
 					</Button>
