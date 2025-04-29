@@ -1,8 +1,5 @@
-import { neon, neonConfig } from '@neondatabase/serverless'
+import { neon } from '@neondatabase/serverless'
 import { Pool } from 'pg'
-
-// Настройка Neon для работы с Next.js
-neonConfig.fetchConnectionCache = true
 
 // Получаем строку подключения из переменных окружения
 const connectionString = process.env.DATABASE_URL
