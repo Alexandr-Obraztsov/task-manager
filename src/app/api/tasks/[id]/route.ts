@@ -17,7 +17,8 @@ export async function GET(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		const taskId = params.id
+		// В Next.js App Router требуется асинхронный доступ к params
+		const { id: taskId } = params
 
 		// Получаем задачу из базы данных
 		const result = await sql`
@@ -56,7 +57,8 @@ export async function PATCH(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		const taskId = params.id
+		// В Next.js App Router требуется асинхронный доступ к params
+		const { id: taskId } = params
 		const body = await request.json()
 		const { title, description, completed } = body
 
@@ -170,7 +172,8 @@ export async function DELETE(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		const taskId = params.id
+		// В Next.js App Router требуется асинхронный доступ к params
+		const { id: taskId } = params
 
 		// Проверяем существование задачи
 		const checkResult = await sql`
