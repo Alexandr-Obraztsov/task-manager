@@ -8,6 +8,7 @@ interface Task {
 	description: string
 	completed: boolean
 	created_at: string
+	updated_at: string
 	user_id: string
 }
 
@@ -17,8 +18,7 @@ export async function GET(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		// В Next.js App Router требуется асинхронный доступ к params
-		const { id: taskId } = params
+		const { id: taskId } = await params
 
 		// Получаем задачу из базы данных
 		const result = await sql`
@@ -38,6 +38,7 @@ export async function GET(
 			description: task.description,
 			completed: task.completed,
 			createdAt: task.created_at,
+			updatedAt: task.updated_at,
 			userId: task.user_id,
 		}
 
@@ -57,8 +58,7 @@ export async function PATCH(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		// В Next.js App Router требуется асинхронный доступ к params
-		const { id: taskId } = params
+		const { id: taskId } = await params
 		const body = await request.json()
 		const { title, description, completed } = body
 
@@ -81,49 +81,49 @@ export async function PATCH(
 		) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET title = ${title}, description = ${description}, completed = ${completed}
+				SET title = ${title}, description = ${description}, completed = ${completed}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
 		} else if (title !== undefined && description !== undefined) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET title = ${title}, description = ${description}
+				SET title = ${title}, description = ${description}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
 		} else if (title !== undefined && completed !== undefined) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET title = ${title}, completed = ${completed}
+				SET title = ${title}, completed = ${completed}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
 		} else if (description !== undefined && completed !== undefined) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET description = ${description}, completed = ${completed}
+				SET description = ${description}, completed = ${completed}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
 		} else if (title !== undefined) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET title = ${title}
+				SET title = ${title}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
 		} else if (description !== undefined) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET description = ${description}
+				SET description = ${description}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
 		} else if (completed !== undefined) {
 			updateQuery = sql`
 				UPDATE tasks
-				SET completed = ${completed}
+				SET completed = ${completed}, updated_at = CURRENT_TIMESTAMP
 				WHERE id = ${taskId}
 				RETURNING *
 			`
@@ -153,6 +153,7 @@ export async function PATCH(
 			description: updatedTask.description,
 			completed: updatedTask.completed,
 			createdAt: updatedTask.created_at,
+			updatedAt: updatedTask.updated_at,
 			userId: updatedTask.user_id,
 		}
 
@@ -172,8 +173,7 @@ export async function DELETE(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		// В Next.js App Router требуется асинхронный доступ к params
-		const { id: taskId } = params
+		const { id: taskId } = await params
 
 		// Проверяем существование задачи
 		const checkResult = await sql`

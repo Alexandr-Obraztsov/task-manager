@@ -5,17 +5,7 @@ import { sql, initializeDatabase } from '@/lib/db'
 // Инициализация базы данных при первом вызове API
 initializeDatabase()
 
-// Тип для задачи
-interface Task {
-	id: string
-	title: string
-	description: string
-	completed: boolean
-	created_at: string
-	user_id: string
-}
-
-// Получение списка задач пользователя
+// GET /api/tasks - Получение списка задач
 export async function GET(request: NextRequest) {
 	try {
 		const { searchParams } = new URL(request.url)
@@ -30,11 +20,11 @@ export async function GET(request: NextRequest) {
 
 		// Получаем задачи пользователя из базы данных, отсортированные по дате создания
 		const tasks = await sql`
-      SELECT *
-      FROM tasks
-      WHERE user_id = ${userId}
-      ORDER BY created_at DESC
-    `
+			SELECT *
+			FROM tasks
+			WHERE user_id = ${userId}
+			ORDER BY created_at DESC
+		`
 
 		// Преобразуем поля из snake_case в camelCase для соответствия интерфейсу API
 		const formattedTasks = tasks.map(task => ({
@@ -43,6 +33,7 @@ export async function GET(request: NextRequest) {
 			description: task.description,
 			completed: task.completed,
 			createdAt: task.created_at,
+			updatedAt: task.updated_at,
 			userId: task.user_id,
 		}))
 
@@ -56,7 +47,7 @@ export async function GET(request: NextRequest) {
 	}
 }
 
-// Создание новой задачи
+// POST /api/tasks - Создание новой задачи
 export async function POST(request: NextRequest) {
 	try {
 		const body = await request.json()
@@ -74,12 +65,14 @@ export async function POST(request: NextRequest) {
 
 		// Добавляем задачу в базу данных
 		const result = await sql`
-      INSERT INTO tasks (id, title, description, user_id)
-      VALUES (${taskId}, ${title}, ${description || ''}, ${userId})
-      RETURNING *
-    `
+			INSERT INTO tasks (id, title, description, user_id, created_at, updated_at)
+			VALUES (${taskId}, ${title}, ${
+			description || ''
+		}, ${userId}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+			RETURNING *
+		`
 
-		const newTask = result[0] as Task
+		const newTask = result[0]
 
 		// Преобразуем поля из snake_case в camelCase для соответствия интерфейсу API
 		const formattedTask = {
@@ -88,6 +81,7 @@ export async function POST(request: NextRequest) {
 			description: newTask.description,
 			completed: newTask.completed,
 			createdAt: newTask.created_at,
+			updatedAt: newTask.updated_at,
 			userId: newTask.user_id,
 		}
 

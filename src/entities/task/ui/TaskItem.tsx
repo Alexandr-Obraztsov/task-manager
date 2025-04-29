@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Task } from '@/entities/task/model/types'
 import { Button, Card, Badge, Input, Textarea } from '@/shared/ui'
+import Link from 'next/link'
 
 interface TaskItemProps {
 	task: Task
@@ -102,10 +103,10 @@ export default function TaskItem({
 		<Card
 			className={`transition-all duration-200 mb-4 ${
 				task.completed
-					? 'opacity-80'
-					: 'hover:shadow-lg hover:border-opacity-30 hover:border-[var(--tg-theme-button-color)]'
+					? 'opacity-90 border-green-500 border-opacity-40'
+					: 'border-[var(--tg-theme-hint-color)] border-opacity-30 shadow-md hover:shadow-lg hover:border-[var(--tg-theme-button-color)] hover:border-opacity-40'
 			}`}
-			variant={task.completed ? 'outlined' : 'elevated'}
+			variant='outlined'
 		>
 			<div className='flex items-start justify-between'>
 				<div className='flex items-start space-x-3 flex-1'>
@@ -117,35 +118,31 @@ export default function TaskItem({
 							className='h-5 w-5 rounded border-2 border-[var(--tg-theme-button-color)] text-[var(--tg-theme-button-color)] focus:ring-[var(--tg-theme-button-color)] focus:ring-opacity-30'
 						/>
 					</div>
-					<div className='flex-1 min-w-0'>
-						<div className='flex items-center flex-wrap gap-2 mb-1'>
-							<h3
-								className={`font-medium text-base break-words ${
-									task.completed
-										? 'line-through text-[var(--tg-theme-hint-color)]'
-										: 'text-[var(--tg-theme-text-color)]'
-								}`}
-							>
-								{task.title}
-							</h3>
-							{task.completed && (
-								<Badge variant='success' size='sm' rounded>
-									Выполнено
-								</Badge>
-							)}
-						</div>
+					<div className='flex-1 min-w-0 overflow-hidden'>
+						<Link href={`/tasks/${task.id}`} className='block hover:opacity-90'>
+							<div className='flex items-center flex-wrap gap-2 mb-1'>
+								<h3
+									className={`font-medium text-base line-clamp-2 break-words ${
+										task.completed
+											? 'line-through text-[var(--tg-theme-hint-color)]'
+											: 'text-[var(--tg-theme-text-color)]'
+									}`}
+								>
+									{task.title}
+								</h3>
+								{task.completed && (
+									<Badge variant='success' size='sm' rounded>
+										Выполнено
+									</Badge>
+								)}
+							</div>
 
-						{task.description && (
-							<p
-								className={`text-sm mt-2 break-words ${
-									task.completed
-										? 'text-[var(--tg-theme-hint-color)]'
-										: 'text-[var(--tg-theme-text-color)]'
-								}`}
-							>
-								{task.description}
-							</p>
-						)}
+							{!task.completed && task.description && (
+								<p className='text-sm mt-2 line-clamp-3 break-words text-[var(--tg-theme-text-color)]'>
+									{task.description}
+								</p>
+							)}
+						</Link>
 						<p className='text-xs text-[var(--tg-theme-hint-color)] mt-3 flex items-center'>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
@@ -166,16 +163,18 @@ export default function TaskItem({
 					</div>
 				</div>
 				<div className='flex flex-col space-y-2 ml-4'>
-					<Button
-						variant='secondary'
-						onClick={() => setIsEditing(true)}
-						disabled={task.completed}
-						size='sm'
-						fullWidth={false}
-						className='text-sm shadow-sm hover:shadow'
-					>
-						Изменить
-					</Button>
+					{!task.completed && (
+						<Button
+							variant='secondary'
+							onClick={() => setIsEditing(true)}
+							disabled={task.completed}
+							size='sm'
+							fullWidth={false}
+							className='text-sm shadow-sm hover:shadow'
+						>
+							Изменить
+						</Button>
+					)}
 					<Button
 						variant='danger'
 						onClick={handleDelete}

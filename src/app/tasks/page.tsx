@@ -2,8 +2,8 @@
 
 import { Provider } from 'react-redux'
 import { store } from '@/shared/lib/store'
-import { TaskList } from '@/widgets/task-list'
 import { TelegramProvider, useTelegram } from '@/entities/user/model'
+import TaskList from '@/widgets/task-list'
 
 // Компонент для получения данных пользователя и отображения задач
 const TaskApp = () => {

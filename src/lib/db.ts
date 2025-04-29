@@ -25,6 +25,7 @@ export async function initializeDatabase() {
         description TEXT,
         completed BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         user_id TEXT NOT NULL
       )
     `
