@@ -56,7 +56,7 @@ export async function PATCH(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		const taskId = await params.id
+		const taskId = params.id
 		const body = await request.json()
 		const { title, description, completed } = body
 
@@ -170,7 +170,7 @@ export async function DELETE(
 	{ params }: { params: { id: string } }
 ) {
 	try {
-		const taskId = await params.id
+		const taskId = params.id
 
 		// Проверяем существование задачи
 		const checkResult = await sql`
